@@ -1,4 +1,4 @@
-import { concatBytes, encodeUTF8 } from './utils/bytes';
+import { concatBytes, decodeUTF8, encodeUTF8 } from './utils/bytes';
 
 /** Reconnection event passed to the `onReconnecting` handler and event listeners. */
 export interface ReconnectingEvent<Parameters = Record<string, unknown>> {
@@ -106,6 +106,17 @@ function toUint8Array(view: ArrayBufferView): Uint8Array {
     return view;
   }
   return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+}
+
+/** Decode a normalized WebSocket text frame from either text or UTF-8 bytes. */
+export function decodeWebSocketTextData(data: string | ArrayBuffer | ArrayBufferView): string {
+  if (typeof data === 'string') {
+    return data;
+  }
+  if (ArrayBuffer.isView(data)) {
+    return decodeUTF8(toUint8Array(data));
+  }
+  return decodeUTF8(new Uint8Array(data));
 }
 
 /**
