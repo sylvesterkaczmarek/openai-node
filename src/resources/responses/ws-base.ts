@@ -6,6 +6,7 @@ import { sleep } from '../../internal/utils/sleep';
 import { type WebSocketLike, ReadyState } from '../../internal/ws-adapter';
 import {
   SendQueue,
+  decodeWebSocketTextData,
   flattenRawData,
   isRecoverableClose,
   type RawWebSocketData,
@@ -349,8 +350,7 @@ export abstract class ResponsesWSBase<TSocket extends WebSocketLike> extends Res
         return;
       }
 
-      // Coerce to string in case the adapter delivers a typed-array for text frames.
-      const text = typeof data === 'string' ? data : String(data);
+      const text = decodeWebSocketTextData(data);
 
       let event: ResponsesAPI.ResponsesServerEvent;
       try {
