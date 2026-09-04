@@ -32,8 +32,8 @@ export class ResponsesWS extends ResponsesWSBase<NodeWebSocket> {
       headers: {
         'User-Agent': `${this._client.constructor.name}/JS ${VERSION}`,
 
-        ...authHeaders,
         ...this._wsOptions?.headers,
+        ...authHeaders,
       },
       followRedirects: false,
     });
